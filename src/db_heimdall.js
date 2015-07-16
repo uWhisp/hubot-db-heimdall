@@ -30,10 +30,13 @@ var SecGroupForVaultPath = {
 module.exports = function(robot) {
 
   // Setup robot http render engine
-  robot.router.engine('html', swig.renderFile);
-  robot.router.set('view engine', 'html');
-  robot.router.set('views', __dirname + '/../views');
-  robot.router.set('view cache', false);
+  if (robot.router.engine) {
+    // In test environment, we don't have an http server so this methods won't work
+    robot.router.engine('html', swig.renderFile);
+    robot.router.set('view engine', 'html');
+    robot.router.set('views', __dirname + '/../views');
+    robot.router.set('view cache', false);
+  }
 
   // Register tasker to the robot instance
   require('../lib/tasker')(robot);
