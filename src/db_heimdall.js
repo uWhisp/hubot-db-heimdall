@@ -9,7 +9,8 @@
  * External dependencies
  */
 var util = require('util');
-var CONFIG = require('config');
+var pkg = require('../package.json');
+var CONFIG = require('config').get(pkg.name);
 var uuid = require('node-uuid');
 var crypto = require('crypto');
 var swig = require('swig');
