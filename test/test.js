@@ -53,16 +53,14 @@ describe("Hubot-script Functionality", function() {
     robot.shutdown();
   });
 
-  describe("script abc123", function() {
-    /*
-    * hubot script abc123
-    */
-    // Tell hubot script abc123
-    //
-    it("responds to script abc123", function(done) {
-      adapter.on("send", function(envelope, strings) {
+  describe("Managing vault tokens", function() {
+
+    it("responds to set vault token foo", function(done) {
+      adapter.on("reply", function(envelope, strings) {
         try {
-          expect(strings[0]).to.equal("script abc123");
+          expect(strings[0]).to.equal("I've stored your vault token for future use");
+          expect(user.Creds).to.exist;
+          expect(user.Creds.vault_token).to.equal('foo');
           done();
         } catch(e) {
           done(e);
@@ -70,14 +68,15 @@ describe("Hubot-script Functionality", function() {
       });
 
       // Send from first user
-      adapter.receive(new TextMessage(user, robot.name+" reset vault token"));
+      adapter.receive(new TextMessage(user, robot.name+" set vault token foo"));
     });
 
-    it("responds to script me abc123", function(done) {
+    it("responds to reset vault token", function(done) {
 
-      adapter.on("send", function(envelope, strings) {
+      adapter.on("reply", function(envelope, strings) {
         try {
-          expect(strings[0]).to.equal("script abc123");
+          expect(strings[0]).to.equal("I've nuked your vault token");
+          expect(user.Creds).to.not.exist;
           done();
         } catch(e) {
           done(e);
@@ -85,7 +84,7 @@ describe("Hubot-script Functionality", function() {
       });
 
       // Send from second user
-      adapter.receive(new TextMessage(user2, robot.name+" script me abc123"));
+      adapter.receive(new TextMessage(user2, robot.name+" reset vault token"));
     });
   });
 });
