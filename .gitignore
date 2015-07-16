@@ -1,0 +1,5 @@
+node_modules
+*.swp
+*.swo
+*.un~
+hubot-db-heimdall.sublime-workspace
