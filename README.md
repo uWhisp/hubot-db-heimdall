@@ -10,13 +10,21 @@ As said, this script uses Vault API under the hood, providing an abstraction lay
 
 `hubot give me <level> access to <database> database`
 
+The `level` corresponds to the Vault role you want to use to access the specified `database`. A useful pattern would be to have `readonly` and `readwrite` levels, and different databases for different environments, so you could do something like this:
+
+`hubot give me readonly access to production database`
+
 ### Store a user's Vault token
 
 `hubot set vault token [for <user> ] <token>`
 
+This command sets a Vault token for the sender user or for the specified user. Note that only admins can set tokens for other users. See [hubot-auth](https://github.com/hubot-scripts/hubot-auth).
+
 ### Remove a user's Vault token
 
 `hubot reset vault token [for <user> ]`
+
+This removes a stored Vault token for the sender user or from the specified user. As with the set command, only admins can reset tokens for other users.
 
 ## Installation
 
@@ -30,7 +38,7 @@ And then add `"hubot-db-heimdall"` to the `external-scripts.json` file.
 
 ### How to configure vault
 
-### Configure access to AWS RDS security groups
+### Configure access to AWS RDS security groups (optional)
 
 - http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html
 
