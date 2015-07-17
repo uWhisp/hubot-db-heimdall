@@ -111,7 +111,7 @@ module.exports = function(robot) {
     if (msg.envelope.user.Creds === undefined || msg.envelope.user.Creds.vault_token === undefined) {
       return msg.send(util.format(
         CONFIG.Strings.sorry_dave +
-        '\nI need your vault token in order to do this.\nYou should ask your beloved sysadmin ;)',
+        '\nI need your vault token in order to do this.\nYou should ask the hubot keeper.',
         msg.envelope.user.name
       ));
     }
