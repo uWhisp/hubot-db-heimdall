@@ -211,19 +211,21 @@ module.exports = function(robot) {
 
       robot.send({ room: msg.envelope.user.name }, response.join('\n'));
 
-      // Send a link to enable IP access to DB
-      var nonce = crypto.createHash('sha256').update(uuid.v4(), 'utf8').digest('hex');
-      robot.brain.set(util.format('heimdall_access_%s', nonce), {
-        rds_security_group: db.rds_security_group,
-        requested: new Date().getTime(),
-        lease_duration: parsedBody.lease_duration
-      });
+      if (db.rds_security_group) {
+        // Send a link to enable IP access to DB
+        var nonce = crypto.createHash('sha256').update(uuid.v4(), 'utf8').digest('hex');
+        robot.brain.set(util.format('heimdall_access_%s', nonce), {
+          rds_security_group: db.rds_security_group,
+          requested: new Date().getTime(),
+          lease_duration: parsedBody.lease_duration
+        });
 
-      robot.send(
-        { room: msg.envelope.user.name },
-        'Direct your browser here to enable access to DB from your current IP address\n' +
-        CONFIG.Urls.base_url + 'heimdall/access/' + nonce
-      );
+        robot.send(
+          { room: msg.envelope.user.name },
+          'Direct your browser here to enable access to DB from your current IP address\n' +
+          CONFIG.Urls.base_url + 'heimdall/access/' + nonce
+        );
+      }
 
       if (msg.envelope.room !== robot.brain.userForId(msg.envelope.user.id).room) {
         msg.reply('I\'ve sent the access credentials in a private chat');
