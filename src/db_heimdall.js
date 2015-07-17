@@ -30,6 +30,24 @@ var SecGroupForVaultPath = {
 
 module.exports = function(robot) {
 
+  var searchDb = function(db_name) {
+    for (var i in CONFIG.Databases) {
+      if (CONFIG.Databases[i].matcher.test(db_name)) {
+        return CONFIG.Databases[i];
+      }
+    }
+    return null;
+  };
+
+  var checkVaultRole = function(db, role) {
+    for (var i in db.vault_roles) {
+      if (db.vault_roles[i].matcher.test(role)) {
+        return db.vault_roles[i].name;
+      }
+    }
+    return null;
+  };
+
   // Setup robot http render engine
   if (robot.router.engine) {
     // In test environment, we don't have an http server so this methods won't work
@@ -78,7 +96,7 @@ module.exports = function(robot) {
       res.render('not_found');
     } else {
       heimdall.allowAccessToIp({
-        DBSecurityGroupName: SecGroupForVaultPath[access_request.vault_path],
+        DBSecurityGroupName: access_request.rds_security_group,
         CIDRIP: ip,
         ttl: ttl
       }, function(err) {
@@ -104,43 +122,25 @@ module.exports = function(robot) {
       ));
     }
 
-    // Check the access level requested
-    var level;
-    switch (msg.match[1].toLowerCase()) {
-    case 'read':
-    case 'ro':
-      level = 'readonly';
-      break;
-    case 'write':
-    case 'rw':
-      level = 'readwrite';
-      break;
-    case 'admin':
-      level = 'admin';
-      break;
-    default:
+    // First check the corresponding database
+    var db = searchDb(msg.match[2]);
+    if (db === null) {
+      // TODO: print available databases
       return msg.send(util.format(
-        CONFIG.Strings.sorry_dave + '\nUnknown access level *%s*.\nMust be read, ro, write, rw or admin',
+        CONFIG.Strings.sorry_dave + '\nUnknown database *%s*.',
         msg.envelope.user.name,
-        level
+        msg.match[2]
       ));
     }
 
-    // Check the environment of the database to access
-    var vault_path;
-    switch (msg.match[2].toLowerCase()) {
-    case 'prod':
-    case 'production':
-      vault_path = 'db_production';
-      break;
-    case 'test':
-      vault_path = 'db_test';
-      break;
-    default:
+    // Now check the access level requested for this database
+    var role = checkVaultRole(db, msg.match[1]);
+    if (role === null) {
+      // TODO: print available vault roles
       return msg.send(util.format(
-        CONFIG.Strings.sorry_dave + '\nUnknown environment *%s*.\nMust be production, prod or test',
+        CONFIG.Strings.sorry_dave + '\nUnknown access level *%s*.',
         msg.envelope.user.name,
-        msg.match[2]
+        msg.match[1]
       ));
     }
 
@@ -149,8 +149,8 @@ module.exports = function(robot) {
     var url = util.format(
       '%s/v1/%s/creds/%s',
       CONFIG.Urls.vault_base_url,
-      vault_path,
-      level
+      db.vault_mount,
+      role
     );
 
     robot.http(url)
@@ -173,12 +173,12 @@ module.exports = function(robot) {
         return msg.send(util.format(
           CONFIG.Strings.sorry_dave + '\nYou\'re not authorized to request *%s* access to *%s* database',
           msg.envelope.user.name,
-          level,
-          vault_path
+          role,
+          db.name
         ));
       } else if (res.statusCode === 503) {
         return msg.send(util.format(
-          CONFIG.Strings.sorry_dave + '\nVault is sealed and cannot retreave any data from it',
+          CONFIG.Strings.sorry_dave + '\nVault is sealed and I cannot retreave any data from it',
           msg.envelope.user.name
         ));
       } else if (res.statusCode > 299) {
@@ -220,7 +220,7 @@ module.exports = function(robot) {
       // Send a link to enable IP access to DB
       var nonce = crypto.createHash('sha256').update(uuid.v4(), 'utf8').digest('hex');
       robot.brain.set(util.format('heimdall_access_%s', nonce), {
-        vault_path: vault_path,
+        rds_security_group: db.rds_security_group,
         requested: new Date().getTime(),
         lease_duration: parsedBody.lease_duration
       });
