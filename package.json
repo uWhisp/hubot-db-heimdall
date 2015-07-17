@@ -9,7 +9,8 @@
     "hubot-scripts",
     "script",
     "MySQL",
-    "vault"
+    "vault",
+    "AWS"
   ],
   "repository": {
     "type": "git",
@@ -34,8 +35,5 @@
   "main": "index.coffee",
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script --reporter spec"
-  },
-  "directories": {
-    "test": "test"
   }
 }
