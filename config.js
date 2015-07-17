@@ -10,3 +10,5 @@ var defaultConfig = {
 };
 
 config.util.setModuleDefaults(package.name, defaultConfig);
+
+// TODO: check required config items

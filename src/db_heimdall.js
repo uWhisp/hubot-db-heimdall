@@ -22,12 +22,6 @@ var swig = require('swig');
 var heimdall = require('../lib/db_heimdall');
 
 
-var SecGroupForVaultPath = {
-  db_production: 'db-uwhisp-production',
-  db_test: 'db-uwhisp-test'
-};
-
-
 module.exports = function(robot) {
 
   var searchDb = function(db_name) {
