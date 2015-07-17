@@ -2,7 +2,7 @@
 //   Grants temporary acces to MySQL databases
 //
 // Commands:
-//   hubot give me [ `read` | `write` | `admin` ] access to `environment` database - Gives you temporary credentials to access the `environment` database
+//   hubot give me `level` access to `database` database - Gives you temporary credentials to access the specified database
 //
 
 /*
