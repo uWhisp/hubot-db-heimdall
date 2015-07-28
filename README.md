@@ -1,4 +1,4 @@
-# Hubot DB Heimdall
+# Hubot DB Heimdall  [![Build Status](https://travis-ci.org/uWhisp/hubot-db-heimdall.svg?branch=master)](https://travis-ci.org/uWhisp/hubot-db-heimdall)
 
 ![](heimdall.png)
 
