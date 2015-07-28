@@ -1,4 +1,4 @@
-# Hubot DB Heimdall  [![Build Status](https://travis-ci.org/uWhisp/hubot-db-heimdall.svg?branch=master)](https://travis-ci.org/uWhisp/hubot-db-heimdall)
+# Hubot DB Heimdall  [![Build Status](https://travis-ci.org/uWhisp/hubot-db-heimdall.svg?branch=master)](https://travis-ci.org/uWhisp/hubot-db-heimdall) [![Coverage Status](https://coveralls.io/repos/uWhisp/hubot-db-heimdall/badge.svg?branch=master&service=github)](https://coveralls.io/github/uWhisp/hubot-db-heimdall?branch=master)
 
 ![](heimdall.png)
 
