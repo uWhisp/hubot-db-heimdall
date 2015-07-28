@@ -98,7 +98,11 @@ Where:
 
 ### How to configure vault
 
+This script uses Vault's MySQL secret backend to generate the proper credentials, follow [this guide](https://vaultproject.io/docs/secrets/mysql/index.html) to know how to setup a MySQL mount with at least one role.
+
 ### Configure access to AWS RDS security groups (optional)
+
+TODO
 
 - http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html
 
