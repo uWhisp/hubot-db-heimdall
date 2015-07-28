@@ -12,10 +12,7 @@
     "vault",
     "AWS"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://git.uwhisp.net/uwhisp/hubot-db-heimdall.git"
-  },
+  "repository": "uwhisp/hubot-db-heimdall",
   "dependencies": {
     "aws-sdk": "2.1.38",
     "coffee-script": "~1.6.3",
