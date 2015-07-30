@@ -1,7 +1,7 @@
 {
   "name": "hubot-db-heimdall",
   "description": "Hubot script to manage access to MySQL databases usign Hashicorp's vault tool",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "iuri aranda <iuri.aranda@uwhisp.com>",
   "license": "MIT",
   "keywords": [
