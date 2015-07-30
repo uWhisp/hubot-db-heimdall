@@ -30,7 +30,7 @@ This removes a stored Vault token for the sender user or from the specified user
 
 ## Installation
 
-`npm install uwhisp/hubot-db-heimdall --save`
+`npm i hubot-db-heimdall --save`
 
 And then add `"hubot-db-heimdall"` to the `external-scripts.json` file.
 
