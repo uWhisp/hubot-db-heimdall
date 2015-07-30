@@ -41,16 +41,6 @@ This Hubot script uses [node-config](https://github.com/lorenwest/node-config) m
 The minimum configuration for this script to work is: 
 
 ```js
-Urls: {
-  vault_base_url: "https://vault.example.com:8200"
-}
-```
-
-You'll also want to add at least one database definition. See [Configuring the databases](#user-content-configuring-the-databases).
-
-At the end you'll end up with a configuration file with at least this content:
-
-```js
 module.exports = {
   'hubot-db-heimdall': {
     Urls: {
@@ -60,6 +50,8 @@ module.exports = {
   }
 };
 ```
+
+You'll also want to add at least one database definition. See [Configuring the databases](#user-content-configuring-the-databases).
 
 ### Configuring the databases
 
@@ -90,11 +82,11 @@ Where:
 
 `name` - only for reference in hubot responses.
 
-`matcher` - A regular expression to match to the Hubot command with the desired database.
+`matcher` - A regular expression to match the Hubot command with the desired database.
 
-`vault_mount` - The vault mount that this database uses, that is the first segment of the Vault path to retrieve the credentials (e.g.: `db_production`/creds/readonly ).
+`vault_mount` - The vault mount that this database uses, that is the first segment of the Vault path to retrieve the credentials (e.g.: **db_production**/creds/readonly).
 
-`vault_roles` - All the roles that Vault accepts for this database (i.e.: Vault mount). A Vault role definition has two components: the `name` is the actual name of the Vault role used, that's the last part of the Vault path (e.g.: db_production/creds/`readonly` ); and the `matcher` is the regular expression that will be used to match the role in the Hubot command.
+`vault_roles` - All the roles that Vault accepts for this database (i.e.: Vault mount). A Vault role definition has two components: the `name` is the actual name of the Vault role used, that's the last part of the Vault path (e.g.: db_production/creds/**readonly**); and the `matcher` is the regular expression that will be used to match the role in the Hubot command.
 
 `rds_security_group` - (optional) AWS RDS security group for the database. See [Configure access to AWS RDS security groups](#user-content-configure-access-to-aws-rds-security-groups-optional).
 
@@ -104,8 +96,39 @@ This script uses Vault's MySQL secret backend to generate the proper credentials
 
 ### Configure access to AWS RDS security groups (optional)
 
-TODO
+If the MySQL database that you want to manage through Hubot is hosted in [AWS RDS](http://aws.amazon.com/rds/), this script also has the ability to grant temporary access to the database security group through the requesting user's IP. To achieve this, when a user requests access to a database, Hubot will send him a link that he'll need to access through the web browser. This way Hubot knows the user's IP and can allow it in the RDS database security group. This access is also temporary and will be revoked automatically by Hubot when the Vault credentials lease time expires.
 
-- http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html
+To enable this functionality, you need to provide valid AWS credentials with the following permissions:
 
+ - rds:AuthorizeDBSecurityGroupIngress
+ - rds:DescribeDBSecurityGroups
+ - rds:RevokeDBSecurityGroupIngress
+
+This script uses the official AWS SDK for Node.js, so any of the authentication methods described [here](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html) will work correctly. But if you want to provide specific credentials for this script only, without interfering with other Hubot scripts, you can set the following configuration parameters:
+
+```js
+module.exports = {
+  'hubot-db-heimdall': {
+    AWS: {
+      aws_access_key_id: "blablablabla",
+      aws_secret_access_key: "blablablabla"
+    },
+    Urls: {...},
+    Databases: [...]
+  }
+};
+```
+
+You'll also need to provide your Hubot server base url with the `base_url` configuration atribute under the `Urls` section, like so:
+
+```js
+{
+  Urls: {
+    base_url: "https://ubot.example.net/",
+    vault_base_url: "https://vault.example.com:8200"
+  }
+}
+```
+
+Finally you'll need to set the `rds_security_group` configuration atribute for each database that you want to manage this way.
 
