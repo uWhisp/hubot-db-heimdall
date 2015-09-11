@@ -6,6 +6,8 @@ A [Hubot](https://hubot.github.com/) script to grant temporary access to MySQL d
 
 As said, this script uses Vault API under the hood, providing an abstraction layer thanks to Hubot. So in order to make things work you'll need an operative Vault server, and properly configured. See [How to configure Vault](#user-content-how-to-configure-vault)
 
+I've only tested this script with the Slack and Shell adapters, but it should work with most adapters.
+
 ## Commands
 
 ### Grant temporary access to a database
